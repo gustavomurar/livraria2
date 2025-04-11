@@ -5,4 +5,4 @@ class Editora(models.Model):
     site = models.URLField(max_length=200, blank=True, null=True)
 
     def __str__(self):
-        return self.nome
+        return f"({self.id}){self.nome.upper()}"
