@@ -6,21 +6,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from core.models import Autor, Categoria, Compra, Editora, Livro, User
+from core.models import Autor, Categoria, Compra, Editora, ItensCompra, Livro, User
 
-
-#admin.site.register(models.User, UserAdmin)
-#admin.site.register(models.Categoria)
-#admin.site.register(models.Editora)
-#admin.site.register(models.Autor)
-#admin.site.register(models.Livro)
-@admin.register(Compra)
-class CompraAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'status')
-    search_fields = ('usuario__email', 'usuario__name')
-    list_filter = ('status',)
-    ordering = ('usuario', 'status')
-    list_per_page = 10
 
 @admin.register(Autor)
 class AutorAdmin(admin.ModelAdmin):
@@ -30,6 +17,7 @@ class AutorAdmin(admin.ModelAdmin):
     ordering = ('nome', 'email')
     list_per_page = 10
 
+
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ('descricao',)
@@ -37,6 +25,24 @@ class CategoriaAdmin(admin.ModelAdmin):
     list_filter = ('descricao',)
     ordering = ('descricao',)
     list_per_page = 10
+
+
+# class ItensCompraInline(admin.TabularInline):
+class ItensCompraInline(admin.StackedInline):
+    model = ItensCompra
+    extra = 1
+
+@admin.register(Compra)
+class CompraAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'status')
+    ordering = ('usuario', 'status')
+    # search_fields = ('usuario', 'status')
+    list_per_page = 10
+
+
+
+    inlines = [ItensCompraInline]
+
 
 @admin.register(Editora)
 class EditoraAdmin(admin.ModelAdmin):
@@ -46,14 +52,14 @@ class EditoraAdmin(admin.ModelAdmin):
     ordering = ('nome', 'email', 'cidade')
     list_per_page = 10
 
+
 @admin.register(Livro)
 class LivroAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'editora', 'categoria')
     search_fields = ('titulo', 'editora__nome', 'categoria__descricao')
     list_filter = ('editora', 'categoria')
     ordering = ('titulo', 'editora', 'categoria')
-    list_per_page = 25
-
+    list_per_page = 10
 
 
 @admin.register(User)
