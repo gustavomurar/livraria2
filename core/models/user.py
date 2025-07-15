@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 from uploader.models import Image
 
+
 class UserManager(BaseUserManager):
     """Manager for users."""
 
@@ -60,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         default=None,
     )
-    
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
