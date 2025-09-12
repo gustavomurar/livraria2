@@ -11,7 +11,6 @@ from rest_framework.serializers import (
 
 from core.models import Compra, ItensCompra
 
-
 class ItensCompraCreateUpdateSerializer(ModelSerializer):
     class Meta:
         model = ItensCompra
@@ -26,7 +25,6 @@ class ItensCompraCreateUpdateSerializer(ModelSerializer):
         if item['quantidade'] > item['livro'].quantidade:
             raise ValidationError('Quantidade de itens maior do que a quantidade em estoque.')
         return item
-
 
 class CompraCreateUpdateSerializer(ModelSerializer):
     usuario = HiddenField(default=CurrentUserDefault())
@@ -55,14 +53,12 @@ class CompraCreateUpdateSerializer(ModelSerializer):
         compra.save()
         return super().update(compra, validated_data)
 
-
 class ItensCompraListSerializer(ModelSerializer):
     livro = CharField(source='livro.titulo', read_only=True)
 
     class Meta:
         model = ItensCompra
         fields = ('livro', 'quantidade')
-
 
 class CompraListSerializer(ModelSerializer):
     usuario = CharField(source='usuario.email', read_only=True)
@@ -71,7 +67,6 @@ class CompraListSerializer(ModelSerializer):
     class Meta:
         model = Compra
         fields = ('id', 'usuario', 'total', 'itens')
-
 
 class ItensCompraSerializer(ModelSerializer):
     total = SerializerMethodField()
@@ -84,13 +79,13 @@ class ItensCompraSerializer(ModelSerializer):
         fields = ('quantidade', 'total', 'livro')
         depth = 2
 
-
 class CompraSerializer(ModelSerializer):
     usuario = CharField(source='usuario.email', read_only=True)
     status = CharField(source='get_status_display', read_only=True)
     data = DateTimeField(read_only=True)
+    tipo_pagamento = CharField(source='get_tipo_pagamento_display', read_only=True) #novocampo
     itens = ItensCompraSerializer(many=True, read_only=True)
 
     class Meta:
         model = Compra
-        fields = ('id', 'usuario', 'status', 'total', 'data', 'itens') 
+        fields = ('id', 'usuario', 'status', 'total', 'data', 'tipo_pagamento', 'itens') 
