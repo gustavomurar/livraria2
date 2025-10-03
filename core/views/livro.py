@@ -1,7 +1,16 @@
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from core.models import Livro
-from core.serializers import LivroListSerializer, LivroRetrieveSerializer, LivroSerializer
+from core.serializers import (
+    LivroAlterarPrecoSerializer,
+    LivroListSerializer,
+    LivroRetrieveSerializer,
+    LivroSerializer,
+)
 
 
 class LivroViewSet(ModelViewSet):
@@ -15,7 +24,13 @@ class LivroViewSet(ModelViewSet):
             return LivroRetrieveSerializer
         return LivroSerializer
 
-@action(detail=True, methods=['patch'])
+    @extend_schema(
+        summary="Alterar preço do livro",
+        description="Altera o preço de um livro específico.",
+        request=LivroAlterarPrecoSerializer,
+        responses={200: None},
+    )
+    @action(detail=True, methods=['patch'])
     def alterar_preco(self, request, pk=None):
         livro = self.get_object()
 
